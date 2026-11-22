@@ -1,0 +1,7 @@
+{
+  "name": "Cmaj7",
+  "frets": ["x", 3, 2, 0, 0, 0],
+  "fingers": [0, 3, 2, 0, 0, 0],
+  "tuning": "standard",
+  "contributor": "strumprint-studio"
+}

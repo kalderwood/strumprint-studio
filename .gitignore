@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+dist/
+*.log
+# keep big audio out of the app repo
+recordings/**/*.wav
+!recordings/README.md

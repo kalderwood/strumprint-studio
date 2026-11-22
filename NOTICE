@@ -1,0 +1,11 @@
+Strumprint Studio
+Released into the public domain under the Unlicense (see LICENSE).
+
+The app bundles no third-party code. It loads these fonts from Google Fonts at runtime:
+- Rubik Moonrocks, SIL Open Font License 1.1
+- Jost, SIL Open Font License 1.1
+
+It uses Futura only if it is already installed on the viewer's computer; Futura is not included.
+
+Pitch detection uses the McLeod Pitch Method (McLeod & Wyvill, 2005), implemented from the published algorithm.
+Key guessing uses the Krumhansl-Schmuckler key profiles.
