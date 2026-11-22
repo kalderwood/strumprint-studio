@@ -27,7 +27,7 @@ No interface handy? Click **Try a demo**, or drop in a WAV recorded in Audacity.
 
 ## Status
 
-v0.6: single notes, live tab, key guessing on the circle of fifths. Chords, sheet music and exports are next. See [docs/build-steps.md](docs/build-steps.md).
+v0.7: single notes, live tab, key guessing on the circle of fifths. Chords, sheet music and exports are next. See [docs/build-steps.md](docs/build-steps.md).
 
 ## Contributing
 
