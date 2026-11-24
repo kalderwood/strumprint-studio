@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to use Strumprint Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+<style>
+/* Same studio as the app: basalt ground, patina and lava accents, Futura text, Rubik Moonrocks name */
+:root{color-scheme:dark;--bg:#16181F;--ink:#F3ECE6;--dim:#A3ABBF;--line:rgba(18,191,191,.2);--panel:rgba(35,40,56,.62)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:radial-gradient(120% 60% at 50% 120%,#3D0000,transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font:17px/1.65 Futura,'Futura PT',Jost,'Century Gothic',sans-serif;overflow-x:clip}
+main{max-width:760px;margin:0 auto;padding:28px max(5vw,18px) 64px}
+nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
+nav a{color:var(--dim);text-decoration:none;font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid transparent}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--line);outline:none}
+nav a[aria-current]{color:#16181F;background:#12BFBF}
+.name{font:400 clamp(34px,6vw,52px)/1.05 'Rubik Moonrocks',Jost,sans-serif;margin:0;text-align:center;background:linear-gradient(90deg,#12BFBF,#007F7F 32%,#CD0B08 64%,#E2622A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{text-align:center;color:var(--dim);margin:8px auto 40px;max-width:34em}
+h2{font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#12BFBF;margin:40px 0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:6px 26px 18px}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0}
+ol.steps li{counter-increment:s;position:relative;padding:14px 0 14px 54px;border-bottom:1px solid rgba(255,255,255,.06)}
+ol.steps li:last-child{border:0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:13px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;color:#16181F;background:var(--c,#12BFBF)}
+ol.steps li:nth-child(2){--c:#09A0A0}ol.steps li:nth-child(3){--c:#007F7F;color:inherit}ol.steps li:nth-child(4){--c:#6B3A4A}ol.steps li:nth-child(5){--c:#CD0B08}ol.steps li:nth-child(6){--c:#D83719}ol.steps li:nth-child(n+7){--c:#E2622A}
+ol.steps li:nth-child(n+3)::before{color:#F3ECE6}
+b{font-weight:600}
+dl{margin:0}dt{font-weight:600;margin-top:16px}dd{margin:2px 0 0;color:var(--dim)}
+ul{padding-left:20px}li{margin:6px 0}
+a{color:#12BFBF}
+code{font-size:15px;background:#232838;padding:2px 7px;border-radius:6px;overflow-wrap:anywhere}
+.go{display:block;width:max-content;margin:44px auto 0;font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spacing:.06em;color:#F3ECE6;text-decoration:none;padding:13px 26px;border-radius:999px;background:linear-gradient(90deg,#CD0B08,#E2622A)}
+.foot{text-align:center;color:var(--dim);font-size:13px;margin-top:40px}
+</style></head><body><main><nav aria-label="Pages"><a href="index.html">Studio</a><a href="instructions.html" aria-current="page">Instructions</a><a href="about.html">About</a></nav>
+<p class="name">Instructions</p>
+<p class="lead">Five minutes from plugging in to seeing your playing as notes and tab.</p>
+
+<h2>What you need</h2>
+<div class="card"><ul>
+<li>A guitar, plugged into an audio interface with a cable, or played into a microphone</li>
+<li>Chrome on a computer (Safari often blocks audio inputs)</li>
+<li>The <code>index.html</code> file from the project folder, opened on your computer, not the preview on claude.ai</li>
+</ul></div>
+
+<h2>Play live</h2>
+<div class="card"><ol class="steps">
+<li><b>Open the studio.</b> Open <code>index.html</code> in Chrome.</li>
+<li><b>Start listening.</b> Click <b>Start listening</b> and choose <b>Allow</b> when Chrome asks for the microphone.</li>
+<li><b>Pick your input.</b> Choose your interface from <b>Input</b>. Leave <b>Channel</b> on <b>Both inputs</b> unless you know your guitar is on Input 1 or 2.</li>
+<li><b>Check your level.</b> Strum and watch the meter. It shows your level in dB. If it says <b>too quiet</b>, turn up your interface's gain or slide <b>Sensitivity</b> left.</li>
+<li><b>Tune up.</b> Play one open string. The big letter shows the note; the dot on the tuner sits in the teal middle when you're in tune.</li>
+<li><b>Play single notes.</b> Each note appears as tab on the easiest string and fret, and as a colored dot in the trail. Chords come in a later version.</li>
+<li><b>Read the circle.</b> After six or more notes, the circle of fifths lights up your likely key, and the chips below show the chords that fit it.</li>
+</ol></div>
+
+<h2>Other ways in</h2>
+<div class="card"><dl>
+<dt>Try a demo</dt><dd>Plays a short built-in melody so you can see everything work without a guitar.</dd>
+<dt>Play a recording</dt><dd>Drop a WAV from Audacity on the box at the bottom, or click <b>Choose an audio file</b>. It plays out loud and transcribes as if you were playing live.</dd>
+</dl></div>
+
+<h2>Settings</h2>
+<div class="card"><dl>
+<dt>Tuning</dt><dd>Standard, Drop D, half step down, Open G or DADGAD. The tab's string names follow it.</dd>
+<dt>Capo</dt><dd>The fret your capo is on. Tab numbers count from the capo.</dd>
+<dt>Sensitivity</dt><dd>Left picks up quieter playing; right ignores more background noise.</dd>
+<dt>Copy tab / Clear</dt><dd>Copy the tab as text to paste anywhere, or start fresh.</dd>
+<dt>The title</dt><dd>Click it to move the sand to its next stage. While you play, it follows your notes.</dd>
+</dl></div>
+
+<h2>If something's wrong</h2>
+<div class="card"><dl>
+<dt>Nothing happens when I click Start listening</dt><dd>Click the icon at the left of Chrome's address bar and allow the microphone. On a Mac, also open System Settings → Privacy &amp; Security → Microphone and switch on Google Chrome, then restart Chrome.</dd>
+<dt>The meter moves but no notes appear</dt><dd>Play one note at a time and let it ring. Use a clean sound: distortion, reverb and delay confuse note detection.</dd>
+<dt>Chrome still won't use my interface</dt><dd>In Terminal, go to the project folder and run <code>python3 -m http.server 8000</code>, then open <code>http://localhost:8000</code> in Chrome.</dd>
+<dt>It feels slow</dt><dd>Close other heavy tabs. A smaller window also helps on very large screens.</dd>
+</dl></div>
+
+<a class="go" href="index.html">Open the studio</a>
+<p class="foot">Strumprint Studio · free and open source · public domain (Unlicense)</p></main></body></html>

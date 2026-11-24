@@ -23,6 +23,8 @@ python3 -m http.server 8000
 
 Then open <http://localhost:8000>.
 
+New here? Read [instructions.html](instructions.html) for a step-by-step guide, or [about.html](about.html) for the idea behind it.
+
 No interface handy? Click **Try a demo**, or drop in a WAV recorded in Audacity.
 
 ## Status

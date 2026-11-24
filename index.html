@@ -64,6 +64,10 @@ h2{font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spac
 .dock{margin-top:18px;border:2px dashed rgba(226,98,42,.4);border-radius:28px;padding:22px;text-align:center}
 .dock.over{border-color:#12BFBF;background:rgba(18,191,191,.07)}
 .filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+.pages{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:-8px 0 18px}
+.pages a{color:var(--dim);text-decoration:none;font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid transparent}
+.pages a:hover,.pages a:focus-visible{color:var(--ink);border-color:var(--line);outline:none}
+.pages a[aria-current]{color:#16181F;background:#12BFBF}
 .foot{color:var(--dim);font-size:13px;margin-top:22px;text-align:center}
 @media(max-width:820px){.stage{grid-template-columns:minmax(0,1fr)}.orb{min-height:320px}}
 @media(prefers-reduced-motion:reduce){.cell em{animation:none}*{transition:none!important}}
@@ -73,16 +77,17 @@ h2{font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spac
 <main>
 <h1 class="sr">Strumprint Studio</h1>
 <p class="sub">Play your guitar. Watch it turn into notes, tab and the circle of fifths.</p>
+<nav class="pages" aria-label="Pages"><a href="index.html" aria-current="page">Studio</a><a href="instructions.html">Instructions</a><a href="about.html">About</a></nav>
 
 <div class="bar">
   <button id="go" class="hot">▶ Start listening</button>
   <button id="stop" class="alt">■ Stop</button>
   <button id="demo" class="alt">✦ Try a demo</button>
   <label>Input<select id="dev"><option value="">Default input</option></select></label>
-  <label>Channel<select id="chan"><option value="0">Input 1</option><option value="1">Input 2</option><option value="mix">Mix both</option></select></label>
+  <label>Channel<select id="chan"><option value="mix">Both inputs</option><option value="0">Input 1 only</option><option value="1">Input 2 only</option></select></label>
   <label>Tuning<select id="tun"></select></label>
   <label>Capo<input id="capo" type="number" min="0" max="9" value="0"></label>
-  <label>Sensitivity<input id="gate" type="range" min="1" max="40" value="10"></label>
+  <label>Sensitivity<input id="gate" type="range" min="1" max="30" value="4"></label>
   <div class="meter" aria-label="Input level"><i id="lvl"></i><span id="status">Not listening</span></div>
 </div>
 <div id="banner" role="status"></div>
@@ -114,7 +119,7 @@ h2{font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spac
   <label class="filebtn">Choose an audio file<input id="file" type="file" accept="audio/*"></label>
   <p class="hint" style="margin:10px 0 0" id="fileinfo">It plays out loud and transcribes as if you were playing live.</p>
 </div>
-<p class="foot">Strumprint Studio v0.6 · open source, public domain (Unlicense) · single notes for now, chords come in Step 7 · works best with a clean direct-input signal</p>
+<p class="foot">Strumprint Studio v0.7 · open source, public domain (Unlicense) · single notes for now, chords come in Step 7 · works best with a clean direct-input signal</p>
 </main>
 <script>
 {
@@ -144,11 +149,12 @@ let cand=-1,stable=0,cur=-1,quiet=0,avg=0,onsetAt=-99,fno=0,curPc=-1,hand=3,leve
 let cols=[],hist=new Array(12).fill(0),recent=[],count=0,bursts=[];
 
 Object.keys(TUN).forEach(k=>$('#tun').insertAdjacentHTML('beforeend',`<option>${k}</option>`));
-try{const s=JSON.parse(localStorage.getItem('strumprint')||'{}');if(s.tun&&TUN[s.tun])$('#tun').value=s.tun;if(s.capo!=null)$('#capo').value=s.capo;if(s.gate)$('#gate').value=s.gate;if(s.chan)$('#chan').value=s.chan}catch(e){}
-const save=()=>{try{localStorage.setItem('strumprint',JSON.stringify({tun:$('#tun').value,capo:$('#capo').value,gate:$('#gate').value,chan:$('#chan').value}))}catch(e){}};
+try{const s=JSON.parse(localStorage.getItem('strumprint2')||'{}');if(s.tun&&TUN[s.tun])$('#tun').value=s.tun;if(s.capo!=null)$('#capo').value=s.capo;if(s.gate)$('#gate').value=s.gate;if(s.chan)$('#chan').value=s.chan}catch(e){}
+const save=()=>{try{localStorage.setItem('strumprint2',JSON.stringify({tun:$('#tun').value,capo:$('#capo').value,gate:$('#gate').value,chan:$('#chan').value}))}catch(e){}};
 
 function ensureCtx(){
-  if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();an=ctx.createAnalyser();an.fftSize=2048;buf=new Float32Array(2048)}
+  if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();an=ctx.createAnalyser();an.fftSize=2048;buf=new Float32Array(2048);
+    const sink=ctx.createGain();sink.gain.value=0;an.connect(sink);sink.connect(ctx.destination)} // silent sink keeps the analyser running in every browser
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
 }
 addEventListener('pointerdown',ensureCtx,{once:false});
@@ -177,12 +183,16 @@ async function listDevices(){
 }
 async function startLive(){
   ensureCtx();stopAll();
+  if(!window.isSecureContext){banner('Your browser won’t share audio inputs with a page opened this way. Open it in Chrome, or run python3 -m http.server 8000 in the folder and go to http://localhost:8000.');return}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){banner('This browser can’t reach your audio interface here. Open the downloaded Strumprint Studio file in Chrome, or drop a WAV below.');return}
   const dev=$('#dev').value;
   try{
     stream=await navigator.mediaDevices.getUserMedia({audio:{deviceId:dev?{exact:dev}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false,channelCount:{ideal:2}}});
   }catch(e){
-    banner('No live input in this preview: the page is sandboxed from your microphone and interface. Open the downloaded Strumprint Studio file in Chrome to play live, or try the demo or a WAV from Audacity below.');status('Input blocked');return;
+    const n=e&&e.name;
+    banner(n==='NotFoundError'||n==='OverconstrainedError'?'No audio input found. Check your interface is plugged in, then pick it from the Input list.':
+      'Audio input was blocked. In Chrome, click the icon at the left of the address bar and allow the microphone. On a Mac also open System Settings → Privacy & Security → Microphone and switch on Chrome. (The hosted preview on claude.ai can never use inputs: use the downloaded file.)');
+    status('Input blocked');return;
   }
   banner('');live=ctx.createMediaStreamSource(stream);split=ctx.createChannelSplitter(2);route();
   active=true;status('Listening…');listDevices();
@@ -314,9 +324,9 @@ function tabText(){
 // visuals
 const sky=$('#sky'),sg=sky.getContext('2d'),oc=$('#orbc'),og=oc.getContext('2d');
 const blobs=Array.from({length:7},(_,i)=>({x:Math.random(),y:Math.random(),r:.18+Math.random()*.2,c:['#007F7F','#E2622A','#12BFBF','#CD0B08','#39486A','#6B3A4A','#E2622A'][i],vx:(Math.random()-.5)*.0004,vy:(Math.random()-.5)*.0004}));
-function size(c){const d=devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}return[c.width,c.height,d]}
+function size(c,mx=1.5){const d=Math.min(devicePixelRatio||1,mx),w=c.clientWidth,h=c.clientHeight;if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}return[c.width,c.height,d]}
 function drawSky(){
-  const[W,H,d]=size(sky);sg.clearRect(0,0,W,H);
+  const[W,H,d]=size(sky,.75);sg.clearRect(0,0,W,H);
   const tt=reduce?0:performance.now()/9000;sg.lineWidth=1.2*d;
   for(let k=0;k<34;k++){const y0=(k+.5)/34*H;sg.beginPath();
     for(let x=0;x<=W;x+=24*d){const y=y0+Math.sin(x/W*6.3+k*.7+tt)*14*d+Math.sin(x/W*17+k*1.9-tt*1.6)*5*d;x?sg.lineTo(x,y):sg.moveTo(x,y)}
@@ -324,10 +334,10 @@ function drawSky(){
   sg.globalCompositeOperation='lighter';
   blobs.forEach(b=>{if(!reduce){b.x+=b.vx;b.y+=b.vy;if(b.x<0||b.x>1)b.vx*=-1;if(b.y<0||b.y>1)b.vy*=-1}
     const r=b.r*Math.max(W,H)*(1+level*1.5),g=sg.createRadialGradient(b.x*W,b.y*H,0,b.x*W,b.y*H,r);
-    g.addColorStop(0,rgba(b.c,.11));g.addColorStop(1,rgba(b.c,0));sg.fillStyle=g;sg.fillRect(0,0,W,H)});
+    g.addColorStop(0,rgba(b.c,.11));g.addColorStop(1,rgba(b.c,0));sg.fillStyle=g;sg.fillRect(b.x*W-r,b.y*H-r,2*r,2*r)});
   bursts=bursts.filter(p=>p.life>0);
   bursts.forEach(p=>{const r=(1.15-p.life)*Math.min(W,H)*.35,g=sg.createRadialGradient(p.x*W,p.y*H,0,p.x*W,p.y*H,r);
-    g.addColorStop(0,rgba(p.c,.38*p.life));g.addColorStop(1,rgba(p.c,0));sg.fillStyle=g;sg.fillRect(0,0,W,H);p.life-=reduce?1:.012});
+    g.addColorStop(0,rgba(p.c,.38*p.life));g.addColorStop(1,rgba(p.c,0));sg.fillStyle=g;sg.fillRect(p.x*W-r,p.y*H-r,2*r,2*r);p.life-=reduce?1:.012});
   sg.globalCompositeOperation='source-over';
 }
 function drawOrb(t){
@@ -352,12 +362,13 @@ function frame(t){
     const db=20*Math.log10(rms+1e-9);level=Math.max(0,Math.min(1,(db+60)/55));
     $('#lvl').style.width=(level*100).toFixed(0)+'%';
     const gate=(+$('#gate').value)/1000;
+    if(live&&fno%15===0)status(`Listening · ${Math.max(-90,db).toFixed(0)} dB${rms<gate?' · too quiet':''}`);
     if(rms>avg*1.9&&rms>gate*1.5)onsetAt=fno;
     avg=avg*.85+rms*.15;
     if(rms<gate){if(++quiet>6){cand=-1;cur=-1}}
     else{quiet=0;
       const[f,c]=mpm(buf,ctx.sampleRate);
-      if(c>.86&&f>60&&f<1300){
+      if(c>.8&&f>60&&f<1300){
         const m=69+12*Math.log2(f/440),n=Math.round(m),ct=Math.round((m-n)*100);
         $('#note').textContent=NAMES[n%12];$('#note').style.color=glow(n%12);
         $('#oct').textContent=`${NAMES[n%12]}${Math.floor(n/12)-1} · ${f.toFixed(1)} Hz`;
@@ -388,7 +399,7 @@ function sampleTitle(){
   const img=c.getImageData(0,0,W,H).data,st=Math.max(2,Math.round(2*d)),pts=[];
   for(let y=0;y<H;y+=st)for(let x=0;x<W;x+=st)if(img[(y*W+x)*4+3]>140)pts.push([x,y]);
   for(let i=pts.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[pts[i],pts[j]]=[pts[j],pts[i]]}
-  const N=Math.min(5600,Math.max(2000,Math.round(W*H/(80*d*d))));tgts=[];
+  const N=Math.min(3600,Math.max(1600,Math.round(W*H/(110*d*d))));tgts=[];
   for(let i=0;i<N;i++)tgts.push(pts.length?pts[i%pts.length]:[Math.random()*W,Math.random()*H]);
   while(P.length<N)P.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0});
   P.length=N;

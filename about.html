@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About Strumprint Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+<style>
+/* Same studio as the app: basalt ground, patina and lava accents, Futura text, Rubik Moonrocks name */
+:root{color-scheme:dark;--bg:#16181F;--ink:#F3ECE6;--dim:#A3ABBF;--line:rgba(18,191,191,.2);--panel:rgba(35,40,56,.62)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:radial-gradient(120% 60% at 50% 120%,#3D0000,transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font:17px/1.65 Futura,'Futura PT',Jost,'Century Gothic',sans-serif;overflow-x:clip}
+main{max-width:760px;margin:0 auto;padding:28px max(5vw,18px) 64px}
+nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
+nav a{color:var(--dim);text-decoration:none;font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid transparent}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--line);outline:none}
+nav a[aria-current]{color:#16181F;background:#12BFBF}
+.name{font:400 clamp(34px,6vw,52px)/1.05 'Rubik Moonrocks',Jost,sans-serif;margin:0;text-align:center;background:linear-gradient(90deg,#12BFBF,#007F7F 32%,#CD0B08 64%,#E2622A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{text-align:center;color:var(--dim);margin:8px auto 40px;max-width:34em}
+h2{font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#12BFBF;margin:40px 0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:6px 26px 18px}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0}
+ol.steps li{counter-increment:s;position:relative;padding:14px 0 14px 54px;border-bottom:1px solid rgba(255,255,255,.06)}
+ol.steps li:last-child{border:0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:13px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;color:#16181F;background:var(--c,#12BFBF)}
+ol.steps li:nth-child(2){--c:#09A0A0}ol.steps li:nth-child(3){--c:#007F7F;color:inherit}ol.steps li:nth-child(4){--c:#6B3A4A}ol.steps li:nth-child(5){--c:#CD0B08}ol.steps li:nth-child(6){--c:#D83719}ol.steps li:nth-child(n+7){--c:#E2622A}
+ol.steps li:nth-child(n+3)::before{color:#F3ECE6}
+b{font-weight:600}
+dl{margin:0}dt{font-weight:600;margin-top:16px}dd{margin:2px 0 0;color:var(--dim)}
+ul{padding-left:20px}li{margin:6px 0}
+a{color:#12BFBF}
+code{font-size:15px;background:#232838;padding:2px 7px;border-radius:6px;overflow-wrap:anywhere}
+.go{display:block;width:max-content;margin:44px auto 0;font:500 15px Futura,'Futura PT',Jost,'Century Gothic',sans-serif;letter-spacing:.06em;color:#F3ECE6;text-decoration:none;padding:13px 26px;border-radius:999px;background:linear-gradient(90deg,#CD0B08,#E2622A)}
+.foot{text-align:center;color:var(--dim);font-size:13px;margin-top:40px}
+</style></head><body><main><nav aria-label="Pages"><a href="index.html">Studio</a><a href="instructions.html">Instructions</a><a href="about.html" aria-current="page">About</a></nav>
+<p class="name">Strumprint Studio</p>
+<p class="lead">Strum a song, get its print: notes, tab and the shape of its key, written out as you play.</p>
+
+<h2>What it is</h2>
+<div class="card"><p>Strumprint Studio listens to your guitar through an audio interface or a microphone and writes down what you play, live. You see each note, the tab on the easiest strings and frets, and where your playing sits on the circle of fifths, with the chords that fit your key.</p>
+<p>It runs in your web browser. Nothing is installed and nothing you play leaves your computer.</p></div>
+
+<h2>The idea</h2>
+<div class="card"><p>Every player leaves a print. Sound is vibration, and vibration has shape: scatter sand on a vibrating plate and it gathers into patterns called cymatics. The title shows this. Its sand forms the name, shakes into one of five fingerprint patterns, then breaks into waves that follow your notes.</p>
+<p>The colors come from lava meeting oxidized copper. Sound is the heat; notes cool from molten orange into patina teal, and each of the twelve notes keeps its own color everywhere in the studio.</p></div>
+
+<h2>How it works</h2>
+<div class="card"><ul>
+<li><b>Hearing notes:</b> the McLeod Pitch Method finds the pitch of each sound, many times a second.</li>
+<li><b>Writing tab:</b> each note is placed on the string and fret closest to where your hand already is.</li>
+<li><b>Finding the key:</b> the notes you play are compared with the Krumhansl–Schmuckler key profiles, a classic model of how strongly each note belongs to each key.</li>
+</ul></div>
+
+<h2>Coming next</h2>
+<div class="card"><ul>
+<li>Chord detection, matched against a community chord library</li>
+<li>Sheet music with tab underneath</li>
+<li>Exports to MusicXML, MIDI and PDF that open in MuseScore Studio</li>
+</ul></div>
+
+<h2>Free and open</h2>
+<div class="card"><p>The code is public domain under the Unlicense: anyone can use, change or share it for anything. Chord shapes and recordings from the community are released under CC0, so the library stays free for everyone too.</p>
+<p>Want to help? Add a chord shape or record a chord with the simple method in the project's <code>CONTRIBUTING.md</code> and <code>recordings/README.md</code>.</p></div>
+
+<h2>Credits</h2>
+<div class="card"><p>Fonts: Rubik Moonrocks and Jost (SIL Open Font License), with Futura used when it's already on your computer. Built with plain HTML and JavaScript, with no outside code libraries.</p></div>
+
+<a class="go" href="index.html">Open the studio</a>
+<p class="foot">Strumprint Studio · free and open source · public domain (Unlicense)</p></main></body></html>
